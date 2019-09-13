@@ -48,6 +48,9 @@ class BluetoothDevice {
   Future disconnect() =>
       FlutterBlue.instance._channel.invokeMethod('disconnect', id.toString());
 
+  Future<bool> refreshServices() =>
+      FlutterBlue.instance._channel.invokeMethod('refreshServices', id.toString());
+
   BehaviorSubject<List<BluetoothService>> _services =
       BehaviorSubject.seeded([]);
 

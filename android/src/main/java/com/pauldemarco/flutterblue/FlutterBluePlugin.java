@@ -51,6 +51,9 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
 
+import java.lang.reflect.Method;
+
+
 
 /**
  * FlutterBluePlugin
@@ -240,6 +243,28 @@ public class FlutterBluePlugin implements MethodCallHandler, RequestPermissionsR
                     }
                 }
                 result.success(null);
+                break;
+            }
+
+            case "refreshServices":
+            {
+                String deviceId = (String)call.arguments;
+                BluetoothGatt gattServer = mGattServers.get(deviceId);
+                try {
+                    //Method localMethod = gattServer.getClass().getMethod("refresh", new Class[0]);
+                    Method localMethod = gattServer.getClass().getMethod("refresh");
+                    if (localMethod != null) {
+                        boolean bool = (Boolean) localMethod.invoke(gattServer);//, new Object[0]);
+                        log(LogLevel.DEBUG, "[refreshServices] status: " + bool);
+                        result.success(null);
+                    } else {
+                        log(LogLevel.DEBUG, "[refreshServices] status: localMethod is null");
+                        result.success(null);
+                    }
+
+                } catch (Exception localException) {
+                    result.error("refresh_error", "error when refreshing device services", null);
+                }
                 break;
             }
 

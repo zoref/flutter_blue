@@ -239,6 +239,8 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     } @catch(FlutterError *e) {
       result(e);
     }
+  } else if([@"refreshServices" isEqualToString:call.method]) {
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }
