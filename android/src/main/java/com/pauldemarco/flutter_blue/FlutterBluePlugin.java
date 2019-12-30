@@ -247,8 +247,8 @@ public class FlutterBluePlugin implements MethodCallHandler, RequestPermissionsR
             case "refreshServices":
             {
                 String deviceId = (String)call.arguments;
-                BluetoothGatt gattServer = mGattServers.get(deviceId);
                 try {
+                    BluetoothGatt gattServer = locateGatt(deviceId);
                     //Method localMethod = gattServer.getClass().getMethod("refresh", new Class[0]);
                     Method localMethod = gattServer.getClass().getMethod("refresh");
                     if (localMethod != null) {
@@ -260,8 +260,8 @@ public class FlutterBluePlugin implements MethodCallHandler, RequestPermissionsR
                         result.success(null);
                     }
 
-                } catch (Exception localException) {
-                    result.error("refresh_error", "error when refreshing device services", null);
+                } catch (Exception e) {
+                    result.error("refresh_error", e.getMessage(), e);
                 }
                 break;
             }
